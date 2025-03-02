@@ -4,7 +4,7 @@
 #include <errno.h>
 #include <limits.h>
 
-char *const HELP = "Usage: sum x1 x2 x3 ... xn with n >= 1\n";
+char *const HELP = "Usage: arith x1 x2 x3 ... xn for integers xi\n";
 
 int main(int argc, char **argv) {
     if (argc < 2) {
