@@ -6,6 +6,7 @@
 #include <getopt.h>
 #include <unistd.h>
 #include <math.h>
+#include <ctype.h>
 
 char *const USAGE = "Usage: arith [-MODE] x1 x2 x3 ... xn for integers xi. Type \"arith -h\" for more.\n";
 char *const HELP = "Usage: arith [-MODE] x1 x2 x3 ... xn for integers xi.\n"
@@ -13,21 +14,20 @@ char *const HELP = "Usage: arith [-MODE] x1 x2 x3 ... xn for integers xi.\n"
                     "-s/(empty): addition\n"
                     "-m: arithmetic mean\n";
 
-char get_mode(int argc, char **argv) {
-    int opt, ret = 'S';
-    while ((opt = getopt(argc, argv, "hsm")) != -1) {
-        if (ret != 'S') return -1;
-        switch (opt) {
-            case 'h':
-            case 's':
-            case 'm':
-                ret = opt;
-                break;
-            default:
-                return -1;
-        }
+int isnumber(char *str) {
+    int len = strlen(str);
+    if (len && !(*str == '-' || isdigit(*str))) return 0;
+    for (int i = 1; i < len; ++i) {
+        if (!isdigit(str[i])) return 0;
     }
-    return ret;
+    return 1;
+}
+
+char get_mode(int argc, char **argv) {
+    char *mode = argv[1];
+    if (argc < 2 || isnumber(mode)) return 'S';
+    if (strlen(mode) != 2) return -1;
+    return mode[1];
 }
 
 int sum_overflows(long res, long n) {
